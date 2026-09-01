@@ -1,0 +1,9 @@
+logs/*
+!logs/.gitkeep
+state/*
+!state/.gitkeep
+docs/CODES.txt
+docs/*.codes.txt
+*.code-list.txt
+__pycache__/
+*.py[cod]

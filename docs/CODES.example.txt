@@ -1,0 +1,3 @@
+# Copy this file outside the repository or to docs/CODES.txt (ignored by Git).
+# Put only owner-authorized codes below, one per line.
+# Do not commit actual codes.
