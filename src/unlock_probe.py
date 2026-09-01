@@ -90,6 +90,8 @@ def read_candidates(path: Path) -> list[str]:
         raise ValueError("codes file contains no candidates")
     if any(any(ch.isspace() for ch in code) for code in candidates):
         raise ValueError("a candidate contains whitespace")
+    if any(re.fullmatch(r"[0-9]{16}", code) is None for code in candidates):
+        raise ValueError("every candidate must contain exactly 16 ASCII digits")
     if len(candidates) != len(set(candidates)):
         raise ValueError("duplicate candidates are not allowed")
     return candidates
