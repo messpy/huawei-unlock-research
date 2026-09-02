@@ -8,7 +8,7 @@
 - Luhn + sqrt 候補式は **UNVERIFIED** で、実装していない。
 - Huawei 公式情報を確認済み。現在 Bootloader code は提供されていない。
 - `docs/CODES.txt` は手動入力の1行1候補（空行・`#`コメント無視）として、16桁ASCII数字を検証する。
-- 実測 index=0 は `check password failed!` のため wrong_code / confirmed failed として解消済み。次回は index=1 から開始する（未送信）。
+- 実測 index=0 は `check password failed!` のため wrong_code / confirmed failed として解消済み。index=1 は未確定の履歴として保持し、再送・再分類しない。新規 probe は index=2 から開始する。
 - timeout 後に確認したところ index=1 は結果未確定。state では過去の未確定記録として
   保持し、index=1 を再送・再分類しない。新規 probe は Fastboot 接続の厳密な事前確認後にのみ
   index=2から開始する。
@@ -24,10 +24,13 @@
 - ANE-LX2 / EMUI 9.1.0.353 では PotatoNV が FBLOCK 書込み中に失敗した公開報告がある。
   exact ANE-LX2Jではないが、family-level 対応表だけで実行可としない。詳細は
   `docs/POTATONV_SAFETY_RESEARCH.md` に記録する。
+- PotatoNV 実行準備は **NOT READY**。Windows/VCOM環境、trusted ANE-LX2J testpoint 図、
+  exact復旧経路、USRKEY-only手順、検証済みユーザーデータbackup が未達。詳細は
+  `docs/POTATONV_EXECUTION_READINESS.md` に記録する。
 
 ## Next action
 
-1. PotatoNVなどの状態変更を検討する前に、通常のユーザーデータをバックアップし、
-   復元可能であることを独立に確認する（NVME/USRKEYのバックアップではない）。
+1. 通常のユーザーデータをバックアップし、復元可能であることを独立に確認する。
+   NVME/USRKEY/FRP partition のバックアップではないことも記録する。
 2. exact firmware の整合性が確認できるまで root/recovery/GSI image を flash しない。
 3. unlock probe を再開する場合でも index=1 は送信・再分類せず、index=2から最大4候補に限る。

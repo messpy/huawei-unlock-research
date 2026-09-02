@@ -83,6 +83,9 @@ safe to run on this exact phone under the existing rules: it persistently
 changes NVME, exact-model success is absent, an ANE-LX2 failure report exists,
 and no exact stock recovery / rollback route is established.
 
+The concrete pre-execution decision gate is maintained in
+`docs/POTATONV_EXECUTION_READINESS.md`.
+
 ## Sources
 
 - [PotatoNV README](https://github.com/kitsuned/PotatoNV)
