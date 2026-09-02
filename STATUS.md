@@ -7,6 +7,8 @@
 - Luhn + sqrt 候補式は **UNVERIFIED** で、実装していない。
 - Huawei 公式情報を確認済み。現在 Bootloader code は提供されていない。
 - `docs/CODES.txt` は手動入力の1行1候補（空行・`#`コメント無視）として、16桁ASCII数字を検証する。
+- 実測 index=0 は `check password failed!` のため wrong_code / confirmed failed として解消済み。次回は index=1 から開始する（未送信）。
+- timeout 後に確認したところ index=1 は結果未確定。Fastboot画面のまま、state は `pending_index=1` を保持し、index=2 へ進めていない。
 
 ## Next action
 

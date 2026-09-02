@@ -130,6 +130,8 @@ def classify_response(output: str) -> str:
         return "command_not_allowed"
     if any(token in text for token in ("okay", "success", "unlocked")):
         return "possible_success"
+    if "check password failed!" in text:
+        return "wrong_code"
     if "failed" in text and any(token in text for token in (
         "unlock code invalid", "unlock code is invalid", "invalid unlock code",
         "incorrect unlock code", "unlock code incorrect", "unlock code mismatch",
@@ -194,7 +196,7 @@ def main() -> int:
         output = (result.stdout + result.stderr).strip()
         log("RECV", f"index={index} exit={result.returncode} response={redact_imei(output)!r}")
         kind = classify_response(output)
-        if kind == "confirmed_failure":
+        if kind in ("wrong_code", "confirmed_failure"):
             state["last_confirmed_failed_index"] = index
             state["pending_index"] = None
             state["next_index"] = index + 1

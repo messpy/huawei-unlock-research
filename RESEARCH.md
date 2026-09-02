@@ -16,3 +16,4 @@ Luhn + sqrt 式による候補生成の主張は **UNVERIFIED** です。根拠�
 - `OKAY` / `success` / `unlocked`: 成功らしい応答として即停止し pending を保持。
 - timeout、端末消失、未知の返答: 失敗に確定せず pending で停止。
 - 明示的な invalid / incorrect / mismatch の unlock-code 失敗のみ、失敗確定として次候補へ進行。
+- 実測（ANE-LX2J、2026-09-01）: `FAILED (remote: 'check password failed!')` と `fastboot: error: Command failed`。この完全な文言の `check password failed!` のみ `wrong_code` と分類する。他の未知の `FAILED` は一般化せず停止する。
