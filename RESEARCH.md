@@ -10,6 +10,13 @@ Huawei の公式サポート記事は、Bootloader code を現在いかなる場
 
 Luhn + sqrt 式による候補生成の主張は **UNVERIFIED** です。根拠、端末世代への適用性、再現性はいずれも確認されていないため、実装していません。候補を使う場合は、所有者が正当に入手・確認した値だけを外部ローカルファイルから明示的に与えてください。
 
+## Root feasibility status (2026-09-02)
+
+Read-only observations support treating the current bootloader as locked.
+Public reports of P20 lite GSI/root workflows do not establish compatibility
+with exact ANE-LX2J 9.1.0.324(C111E37R1P6). Root images must not be flashed.
+See `docs/ROOT_PLAN.md` for sourced CONFIRMED / LIKELY / UNVERIFIED findings.
+
 ## Response classification
 
 - `command not allowed`: 即停止し pending を保持。

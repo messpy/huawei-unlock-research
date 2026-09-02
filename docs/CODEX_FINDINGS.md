@@ -175,3 +175,22 @@ ro.boot.vbmeta.device_state=locked
 ro.boot.veritymode=enforcing
 ro.build.version.security_patch=2020-04-01
 ```
+
+## 2026-09-02 ADB read-only 再確認
+
+`adb devices` は expected serial `CHR7N18A24001030` を唯一の `device` として返した。
+以下の read-only `getprop` はすべて exit code `0` だった。
+
+```text
+ro.product.model=ANE-LX2J
+ro.build.version.release=9
+ro.build.version.emui=EmotionUI_9.1.0
+ro.build.version.security_patch=2020-04-01
+ro.boot.flash.locked=1
+ro.boot.verifiedbootstate=green
+ro.boot.vbmeta.device_state=locked
+ro.boot.veritymode=enforcing
+```
+
+完全なコマンド結果は Git 管理外の `logs/boot_state_20260902_130523.log` に保存した。
+この確認では書き込み、再起動、Fastboot、unlock、flash を実行していない。

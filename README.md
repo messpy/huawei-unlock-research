@@ -4,7 +4,7 @@ Huawei P20 lite 系 `ANE-LX2J`（Android 9 / EMUI 9.1 / Kirin 659）の、所有
 
 ## Scope
 
-ユーザーが正当に入手した Unlock Code 候補を、一回あたり最大 5 件だけ送信し、端末の応答を保守的に観測します。無限試行、コード生成、保護回避は行いません。
+ユーザーが正当に入手した Unlock Code 候補を、一回あたり最大 4 件だけ送信し、端末の応答を保守的に観測します。無限試行、コード生成、保護回避は行いません。
 
 禁止操作: `flash`、`erase`、`format`、OEMINFO 書換え、firmware 書換え。
 

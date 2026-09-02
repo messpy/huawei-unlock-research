@@ -16,12 +16,12 @@
   `ro.boot.verifiedbootstate=green`、`ro.boot.vbmeta.device_state=locked`、
   `ro.boot.veritymode=enforcing`、security patch `2020-04-01`。比較用の実測記録として
   `docs/CODEX_FINDINGS.md` に保持する。
+- ANE-LX2J / EMUI 9.1.0.324 の custom GSI 利用報告はあるが、C111E37R1P6 完全一致の
+  bootloader unlock / Magisk root は **UNVERIFIED**。locked 状態で root 用 image は flash しない。
 
 ## Next action
 
-1. 対象端末を Fastboot モードで接続し、`fastboot devices` が expected serial 1台だけを
-   返すことを確認する。
-2. `docs/CODES.txt` に正当に入手した16桁候補が index=2以降まで存在する場合のみ、
-   バックアップ後に `scripts/run.sh` を使う。
-3. 実行後は `scripts/show_status.sh` と `logs/` を確認する。timeout / unknown response が
-   あれば自動継続しない。
+1. HiSuite の **Update** 画面だけで対象端末向けに表示される model/build 情報を記録する。
+   Update、Rollback、System Recovery、download、restore は選択しない。
+2. exact firmware の整合性が確認できるまで root/recovery/GSI image を flash しない。
+3. unlock probe を再開する場合でも index=1 は送信・再分類せず、index=2から最大4候補に限る。
