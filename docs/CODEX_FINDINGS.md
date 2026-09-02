@@ -195,6 +195,20 @@ ro.boot.veritymode=enforcing
 完全なコマンド結果は Git 管理外の `logs/boot_state_20260902_130523.log` に保存した。
 この確認では書き込み、再起動、Fastboot、unlock、flash を実行していない。
 
+## haexhub index=2 probe（2026-09-02）
+
+Fastboot端末1台と候補SHA-256先頭12桁 `7004ad3a3cfa` を確認後、ユーザー指定候補を1回送信した。
+
+```text
+[STDOUT] (empty)
+[STDERR] (empty)
+exit_code=124
+timeout=yes
+classification=unknown
+```
+
+ログ: `logs/haexhub_index2_20260902_172607.log`。index=3以降、再送、追加の状態変更は実行していない。
+
 ## 2026-09-02 read-only hardware/path inventory
 
 唯一の expected serial `CHR7N18A24001030` が `device` 状態で1台だけ存在することを確認した。
