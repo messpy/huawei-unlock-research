@@ -30,7 +30,6 @@
 
 ## Next action
 
-1. 通常のユーザーデータをバックアップし、復元可能であることを独立に確認する。
-   NVME/USRKEY/FRP partition のバックアップではないことも記録する。
-2. exact firmware の整合性が確認できるまで root/recovery/GSI image を flash しない。
-3. unlock probe を再開する場合でも index=1 は送信・再分類せず、index=2から最大4候補に限る。
+1. ユーザーが指定したread-onlyコマンドがある場合のみ、固定serialを確認して実行・ログ化する。
+2. index=1は再送しない。新規候補はユーザーが具体的なコードとindexを指定した場合に限り、1候補だけ検証する。
+3. 端末状態を変更する操作、候補生成、Web検索、分解は行わない。
