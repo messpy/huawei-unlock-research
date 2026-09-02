@@ -201,3 +201,12 @@ macOS 版 HiSuite を起動して端末接続を確認したが、アプリ内�
 `Update` / `システム更新` 画面は存在しなかった。したがって、このクライアントから
 firmware 提示情報は取得していない。Update、Rollback、System Recovery、download、
 restore は実行していない。
+
+## 端末情報画面の read-only 確認
+
+ADB の `exec-out screencap` で端末情報画面を一時的に確認した。画面上で
+model `ANE-LX2J`、build `9.1.0.324(C111E37R1P6)`、EMUI `9.1.0`、Android `9`、
+security patch `2020-04-01`、CPU `HiSilicon Kirin 659` を確認した。
+
+画面に IMEI が表示されたため、スクリーンショットは記録・Git管理せず、その場で削除した。
+この確認では端末への書き込みや設定変更をしていない。
