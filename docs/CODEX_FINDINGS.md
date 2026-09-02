@@ -195,6 +195,19 @@ ro.boot.veritymode=enforcing
 完全なコマンド結果は Git 管理外の `logs/boot_state_20260902_130523.log` に保存した。
 この確認では書き込み、再起動、Fastboot、unlock、flash を実行していない。
 
+## OEM unlock / FRP 関連 property の read-only 確認
+
+唯一の expected ADB serial を確認した上で、以下を取得した。
+
+```text
+ro.oem_unlock_supported=<empty>
+settings global oem_unlock_allowed=1
+ro.frp.pst=/dev/block/bootdevice/by-name/frp
+```
+
+これらは Fastboot unlock の実行可否、FRP lock state、testpoint/NV操作の安全性を
+確定するものではない。書き込み、設定変更、再起動、Fastboot、unlock、flash は実行していない。
+
 ## macOS HiSuite の確認
 
 macOS 版 HiSuite を起動して端末接続を確認したが、アプリ内に

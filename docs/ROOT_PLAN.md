@@ -58,3 +58,6 @@ available, it must show the exact model/CUST/build before it is recorded.
 
 No `flash`, `erase`, `format`, OEMINFO/NV change, firmware installation, recovery/TWRP/Magisk
 write, or non-matching firmware. Index 1 remains unresolved and must never be resent or reclassified.
+
+PotatoNV-specific preconditions, failure evidence, and recovery limits are in
+`docs/POTATONV_SAFETY_RESEARCH.md`. Its present assessment is **do not execute**.

@@ -21,10 +21,13 @@
 - PotatoNV は `ANE` / Kirin 65x(A) を対象に含むが、testpoint 経由で NVME `USRKEY` を
   書き換えるため、このリポジトリの安全制約では実行禁止。HCU の ANE-LX1 / Kirin 659
   対応表も ANE-LX2J C111E37R1P6 の適用根拠にはならない。
+- ANE-LX2 / EMUI 9.1.0.353 では PotatoNV が FBLOCK 書込み中に失敗した公開報告がある。
+  exact ANE-LX2Jではないが、family-level 対応表だけで実行可としない。詳細は
+  `docs/POTATONV_SAFETY_RESEARCH.md` に記録する。
 
 ## Next action
 
-1. exact `ANE-LX2J 9.1.0.324(C111E37R1P6)` の OTA metadata または公式 package URL を、
-   model/CUST/build が全て一致する形で見つける。別 region / E 値 / build は候補外とする。
+1. PotatoNVなどの状態変更を検討する前に、通常のユーザーデータをバックアップし、
+   復元可能であることを独立に確認する（NVME/USRKEYのバックアップではない）。
 2. exact firmware の整合性が確認できるまで root/recovery/GSI image を flash しない。
 3. unlock probe を再開する場合でも index=1 は送信・再分類せず、index=2から最大4候補に限る。
