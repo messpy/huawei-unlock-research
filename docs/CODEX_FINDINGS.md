@@ -195,6 +195,22 @@ ro.boot.veritymode=enforcing
 完全なコマンド結果は Git 管理外の `logs/boot_state_20260902_130523.log` に保存した。
 この確認では書き込み、再起動、Fastboot、unlock、flash を実行していない。
 
+## 2026-09-02 read-only hardware/path inventory
+
+唯一の expected serial `CHR7N18A24001030` が `device` 状態で1台だけ存在することを確認した。
+新規取得値は `ro.product.board=ANE`、`ro.board.platform=hi6250`、`ro.hardware=hi6250`、
+`ro.boot.hardware=hi6250`、`ro.product.device=HWANE`。`ro.boot.boardid` と `ro.boot.hwrev` は
+空（exit 0）、`settings get global oem_unlock_allowed` は `null`（exit 0）だった。
+既知の build と locked/green/enforcing baseline は再確認値として同一だった。
+
+`cat /proc/partitions` は permission denied（exit 1）。by-name listing は読み取り可能で、
+`frp` を含むリンク一覧をログに保存した。これらは領域の読み出し・書き込みを意味しない。
+
+PotatoNV 2022.03 x86 ZIP の展開先は `/private/tmp/potatonv-2022.03`。ZIP SHA-256 は
+`98344a77eeddee99f4ca145c586a6656b7f98da0cc04be1007dc102ec62ae416`。一覧と
+`hisi65x_a`/`hisi65x_b` の存在を記録した。ログは `logs/read_only_inventory_20260902_152356.log`。
+ADB、端末状態、PotatoNVには変更を加えていない。
+
 ## OEM unlock / FRP 関連 property の read-only 確認
 
 唯一の expected ADB serial を確認した上で、以下を取得した。
