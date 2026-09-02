@@ -211,6 +211,24 @@ PotatoNV 2022.03 x86 ZIP の展開先は `/private/tmp/potatonv-2022.03`。ZIP S
 `hisi65x_a`/`hisi65x_b` の存在を記録した。ログは `logs/read_only_inventory_20260902_152356.log`。
 ADB、端末状態、PotatoNVには変更を加えていない。
 
+## haexhub index=1 再送記録（2026-09-02）
+
+ユーザー指定により、Fastboot端末1台を確認後、候補1件を一度だけ送信した。
+候補自体は記録せず、SHA-256先頭12桁 `a456ce19794d` のみ保存する。
+
+```text
+[STDOUT] (empty)
+[STDERR]
+FAILED (remote: 'check password failed!')
+fastboot: error: Command failed
+exit_code=1
+timeout=no
+classification=confirmed_failed
+```
+
+ログ: `logs/haexhub_index1_20260902_171741.log`。追加候補、再送、flash、erase、
+reboot、設定変更は実行していない。
+
 ## OEM unlock / FRP 関連 property の read-only 確認
 
 唯一の expected ADB serial を確認した上で、以下を取得した。
