@@ -143,3 +143,21 @@ fastboot -s CHR7N18A24001030 oem get-bootinfo
 - unlock 以外を含む候補コードの生成・推測
 - `flash`、`erase`、`format`、OEMINFO 書換え、firmware 書換え
 - Claude が報告した外部情報・仮説を実測として採用すること
+
+## 2026-09-02 限定 probe の実行前確認
+
+この節は外部調査ではなく、この作業環境での実測である。
+
+実行コマンド:
+
+```text
+fastboot devices
+```
+
+結果: exit code `0`、stdout は空、stderr は空。expected serial
+`CHR7N18A24001030` は検出されず、Fastboot 端末が1台だけ存在するという
+実行条件を満たさなかった。そのため index=2以降の `fastboot oem unlock` は
+**一度も送信していない**。timeout は発生していない。
+
+完全なコマンド結果は Git 管理外の
+`logs/limited_probe_preflight_20260902_105528.log` に保存した。

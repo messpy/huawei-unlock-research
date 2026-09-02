@@ -15,7 +15,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 STATE_PATH = ROOT / "state" / "probe-state.json"
 LOG_DIR = ROOT / "logs"
-MAX_PER_RUN = 5
+EXPECTED_SERIAL = "CHR7N18A24001030"
+MAX_PER_RUN = 4
 FASTBOOT_TIMEOUT_SECONDS = 30
 
 
@@ -57,12 +58,13 @@ def atomic_write_state(state: dict[str, Any]) -> None:
 def load_state(expected_serial: str, candidates_digest: str) -> dict[str, Any]:
     if not STATE_PATH.exists():
         state: dict[str, Any] = {
-            "schema_version": 1,
+            "schema_version": 2,
             "expected_serial": expected_serial,
             "candidates_sha256": candidates_digest,
             "last_sent_index": None,
             "last_confirmed_failed_index": None,
             "pending_index": None,
+            "historical_pending_indexes": [],
             "next_index": 0,
             "halt_reason": None,
             "updated_at": utc_now(),
@@ -78,6 +80,28 @@ def load_state(expected_serial: str, candidates_digest: str) -> dict[str, Any]:
         raise ValueError("expected_serial differs from the serial fixed in state")
     if state["candidates_sha256"] != candidates_digest:
         raise ValueError("candidate file differs from the file fixed in state")
+    # The previous run left index 1 unresolved after a timeout.  Preserve that
+    # fact as history, but do not treat it as an in-flight command: it must
+    # never be retransmitted or reclassified by this tool.
+    changed = False
+    historical = state.setdefault("historical_pending_indexes", [])
+    if not isinstance(historical, list) or any(not isinstance(item, int) for item in historical):
+        raise ValueError("historical_pending_indexes is invalid")
+    if state["pending_index"] == 1:
+        if 1 not in historical:
+            historical.append(1)
+        state["pending_index"] = None
+        state["next_index"] = max(state["next_index"], 2)
+        state["halt_reason"] = "index=1 retained as historical unresolved timeout"
+        changed = True
+    elif state["pending_index"] is not None:
+        raise ValueError("an unresolved current pending_index exists; refusing to send")
+    if state.get("schema_version") != 2:
+        state["schema_version"] = 2
+        changed = True
+    if changed:
+        state["updated_at"] = utc_now()
+        atomic_write_state(state)
     return state
 
 
@@ -106,37 +130,54 @@ def redact_imei(text: str) -> str:
     return re.sub(r"(?<!\d)(\d{11})(\d{4})(?!\d)", r"***********\2", text)
 
 
-def connected_serials() -> list[str]:
-    result = subprocess.run(["fastboot", "devices"], text=True, capture_output=True,
-                            timeout=FASTBOOT_TIMEOUT_SECONDS, check=False)
+def safe_output(value: str) -> str:
+    """Keep diagnostic output readable without persisting a full IMEI."""
+    return redact_imei(value).strip() or "<empty>"
+
+
+def run_fastboot_check(command: list[str], display_command: str) -> subprocess.CompletedProcess[str]:
+    """Run and completely log a read-only Fastboot connectivity check."""
+    log("CHECK", f"command={display_command}")
+    try:
+        result = subprocess.run(command, text=True, capture_output=True,
+                                timeout=FASTBOOT_TIMEOUT_SECONDS, check=False)
+    except subprocess.TimeoutExpired as exc:
+        log("CHECK", f"timeout={FASTBOOT_TIMEOUT_SECONDS}s stdout={safe_output(exc.stdout or '')!r} "
+                     f"stderr={safe_output(exc.stderr or '')!r}")
+        raise
+    log("CHECK", f"exit={result.returncode} stdout={safe_output(result.stdout)!r} "
+                 f"stderr={safe_output(result.stderr)!r}")
+    return result
+
+
+def connected_devices() -> list[tuple[str, str]]:
+    result = run_fastboot_check(["fastboot", "devices"], "fastboot devices")
     if result.returncode != 0:
-        raise RuntimeError(f"fastboot devices failed: {(result.stdout + result.stderr).strip()}")
-    return [line.split()[0] for line in result.stdout.splitlines() if line.split()]
+        raise RuntimeError("fastboot devices returned a non-zero exit code")
+    return [(fields[0], fields[1] if len(fields) > 1 else "")
+            for line in result.stdout.splitlines() if (fields := line.split())]
 
 
 def assert_one_expected_device(expected_serial: str) -> None:
-    log("CHECK", "verifying exactly one fastboot device is connected")
-    serials = connected_serials()
-    if len(serials) != 1:
-        raise RuntimeError(f"expected exactly one fastboot device; found {len(serials)}")
-    if serials[0] != expected_serial:
+    devices = connected_devices()
+    if len(devices) != 1:
+        raise RuntimeError(f"expected exactly one fastboot device; found {len(devices)}")
+    serial, mode = devices[0]
+    if serial != expected_serial:
         raise RuntimeError("connected fastboot serial does not match expected_serial")
+    if mode != "fastboot":
+        raise RuntimeError(f"expected fastboot mode; found {mode or '<empty>'}")
     log("CHECK", "one expected fastboot device confirmed")
 
 
 def classify_response(output: str) -> str:
-    text = output.lower()
+    text = output.casefold()
+    if "check password failed!" in output:
+        return "wrong_code"
     if "command not allowed" in text:
         return "command_not_allowed"
     if any(token in text for token in ("okay", "success", "unlocked")):
         return "possible_success"
-    if "check password failed!" in text:
-        return "wrong_code"
-    if "failed" in text and any(token in text for token in (
-        "unlock code invalid", "unlock code is invalid", "invalid unlock code",
-        "incorrect unlock code", "unlock code incorrect", "unlock code mismatch",
-    )):
-        return "confirmed_failure"
     return "unknown"
 
 
@@ -150,24 +191,21 @@ def stop_pending(state: dict[str, Any], reason: str) -> int:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Conservative Huawei Fastboot response probe")
-    parser.add_argument("--expected-serial", required=True)
+    parser.add_argument("--expected-serial", default=EXPECTED_SERIAL)
     parser.add_argument("--codes-file", required=True, type=Path)
     args = parser.parse_args()
-    if not args.expected_serial.strip():
-        raise ValueError("expected_serial must not be empty")
+    if args.expected_serial != EXPECTED_SERIAL:
+        raise ValueError("expected_serial is fixed and does not match this device")
 
     candidates = read_candidates(args.codes_file)
     digest = hashlib.sha256("\n".join(candidates).encode("utf-8")).hexdigest()
     state = load_state(args.expected_serial, digest)
-    if state["pending_index"] is not None:
-        log("CHECK", f"pending_index={state['pending_index']} exists; no command will be sent")
-        return 2
     if state["next_index"] >= len(candidates):
         log("CHECK", "all supplied candidates are already resolved; no command will be sent")
         return 0
 
     print("This may erase the device. Confirm backup, ownership, and the exact serial above.")
-    answer = input("Type yes to send at most 5 owner-authorized candidates: ").strip().lower()
+    answer = input("Type yes to send at most 4 owner-authorized candidates: ").strip().lower()
     if answer != "yes":
         log("CHECK", "operator declined confirmation; no command sent")
         return 0
@@ -186,17 +224,20 @@ def main() -> int:
         state["halt_reason"] = None
         state["updated_at"] = utc_now()
         atomic_write_state(state)
-        log("ACTION", f"sending owner-authorized candidate index={index}")
-        log("SEND", f"index={index} code_sha256_12={candidate_tag(code)} command=fastboot oem unlock <redacted>")
+        log("SEND", f"index={index} code_sha256_12={candidate_tag(code)}")
+        log("ACTION", f"index={index} command=fastboot -s {EXPECTED_SERIAL} oem unlock <redacted>")
         try:
             result = subprocess.run(["fastboot", "-s", args.expected_serial, "oem", "unlock", code],
                                     text=True, capture_output=True, timeout=FASTBOOT_TIMEOUT_SECONDS, check=False)
-        except subprocess.TimeoutExpired:
+        except subprocess.TimeoutExpired as exc:
+            log("RECV", f"index={index} timeout={FASTBOOT_TIMEOUT_SECONDS}s "
+                        f"stdout={safe_output(exc.stdout or '')!r} stderr={safe_output(exc.stderr or '')!r}")
             return stop_pending(state, "fastboot command timed out")
-        output = (result.stdout + result.stderr).strip()
-        log("RECV", f"index={index} exit={result.returncode} response={redact_imei(output)!r}")
+        output = result.stdout + result.stderr
+        log("RECV", f"index={index} exit={result.returncode} stdout={safe_output(result.stdout)!r} "
+                    f"stderr={safe_output(result.stderr)!r}")
         kind = classify_response(output)
-        if kind in ("wrong_code", "confirmed_failure"):
+        if kind == "wrong_code":
             state["last_confirmed_failed_index"] = index
             state["pending_index"] = None
             state["next_index"] = index + 1
