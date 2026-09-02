@@ -1,0 +1,22 @@
+[CHECK]
+command: adb devices
+stdout:
+  <empty>
+stderr:
+  * daemon not running; starting now at tcp:5037
+  ADB server didn't ACK
+  Full server startup log: /var/folders/q3/qqn4bvj956b2y6cnx3rzcmyc0000gn/T//adb.501.log
+  Server had pid: 11955
+  --- adb starting (pid 11955) ---
+  09-02 10:22:28.761 11955 1819438 I adb     : main.cpp:63 Android Debug Bridge version 1.0.41
+  09-02 10:22:28.761 11955 1819438 I adb     : main.cpp:63 Version 35.0.1-11580240
+  09-02 10:22:28.761 11955 1819438 I adb     : main.cpp:63 Installed as /Users/user/Documents/Program/platform-tools/adb
+  09-02 10:22:28.761 11955 1819438 I adb     : main.cpp:63 Running on Darwin 21.6.0 (x86_64)
+  09-02 10:22:28.761 11955 1819438 I adb     : main.cpp:63 
+  09-02 10:22:29.320 11955 1819438 F adb     : main.cpp:163 could not install *smartsocket* listener: Operation not permitted
+  
+  * failed to start daemon
+  adb: failed to check server version: cannot connect to daemon
+exit code: 1
+[ERROR] adb devices failed
+log: /Users/user/work/huawei-unlock-research/logs/boot_state_20260902_102228.log
