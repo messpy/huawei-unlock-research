@@ -194,3 +194,10 @@ ro.boot.veritymode=enforcing
 
 完全なコマンド結果は Git 管理外の `logs/boot_state_20260902_130523.log` に保存した。
 この確認では書き込み、再起動、Fastboot、unlock、flash を実行していない。
+
+## macOS HiSuite の確認
+
+macOS 版 HiSuite を起動して端末接続を確認したが、アプリ内に
+`Update` / `システム更新` 画面は存在しなかった。したがって、このクライアントから
+firmware 提示情報は取得していない。Update、Rollback、System Recovery、download、
+restore は実行していない。

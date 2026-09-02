@@ -38,9 +38,11 @@ This record does not authorize unlocking, flashing, modifying a partition, or ch
 
 ## Safe next action
 
-Use HiSuite's **Update** screen only to inspect and record offered model/build information.
-Do not select Update, Rollback, System Recovery, download, or restore. If it is not an exact
-match, stop; do not substitute region, CUST, or build.
+The installed macOS HiSuite client does not expose an **Update** screen, so it
+cannot be used to inspect an offered firmware build. Do not attempt to work
+around this with Update, Rollback, System Recovery, download, or restore on a
+different client. If a supported read-only firmware-information source becomes
+available, it must show the exact model/CUST/build before it is recorded.
 
 ## Prohibited while locked
 

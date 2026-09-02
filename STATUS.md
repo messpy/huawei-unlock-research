@@ -21,7 +21,7 @@
 
 ## Next action
 
-1. HiSuite の **Update** 画面だけで対象端末向けに表示される model/build 情報を記録する。
+1. macOS 版 HiSuite には Update 画面がないため、これを firmware 情報源として使わない。
    Update、Rollback、System Recovery、download、restore は選択しない。
 2. exact firmware の整合性が確認できるまで root/recovery/GSI image を flash しない。
 3. unlock probe を再開する場合でも index=1 は送信・再分類せず、index=2から最大4候補に限る。
