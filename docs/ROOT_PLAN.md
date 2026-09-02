@@ -21,6 +21,13 @@ This record does not authorize unlocking, flashing, modifying a partition, or ch
 - [Huawei](https://consumer.huawei.com/en/emui/faq/) does not publish complete microSD
   packages from EMUI 4 onward and directs updates/recovery to online update or supported HiSuite.
   Support for recovery depends on the device and corresponding ROM.
+- The [PotatoNV project](https://github.com/kitsuned/PotatoNV) lists P20 Lite / Nova 3e
+  `ANE` as Kirin 65x(A), and Kirin 659 as supported. Its documented method enters
+  DOWNLOAD_VCOM through testpoint and writes a SHA-256 value to NVME `USRKEY`.
+  This is a state-changing NV write, so it is prohibited by this repository's safety rules.
+- [HCU Client's supported-model list](https://hcu-client.com/supported-models.php) lists
+  P20 Lite ANE-LX1 / Kirin 659 with testpoint-related services. It does not establish
+  coverage for ANE-LX2J C111E37R1P6.
 
 ### LIKELY — third-party claim only
 
@@ -35,6 +42,9 @@ This record does not authorize unlocking, flashing, modifying a partition, or ch
 - Magisk/root or TWRP success for that exact build.
 - Exact-firmware availability/integrity and the presence of RECOVERY_RAMDISK, RAMDISK,
   KERNEL, RECOVERY_VENDOR, and VBMETA images in its package.
+- A public OTA metadata record or package URL for exact `ANE-LX2J 9.1.0.324(C111E37R1P6)`.
+  Search results expose other ANE-LX2J C111 packages and other regions/builds, but not
+  the exact E37R1P6 package; none were downloaded or treated as interchangeable.
 
 ## Safe next action
 

@@ -18,10 +18,13 @@
   `docs/CODEX_FINDINGS.md` に保持する。
 - ANE-LX2J / EMUI 9.1.0.324 の custom GSI 利用報告はあるが、C111E37R1P6 完全一致の
   bootloader unlock / Magisk root は **UNVERIFIED**。locked 状態で root 用 image は flash しない。
+- PotatoNV は `ANE` / Kirin 65x(A) を対象に含むが、testpoint 経由で NVME `USRKEY` を
+  書き換えるため、このリポジトリの安全制約では実行禁止。HCU の ANE-LX1 / Kirin 659
+  対応表も ANE-LX2J C111E37R1P6 の適用根拠にはならない。
 
 ## Next action
 
-1. macOS 版 HiSuite には Update 画面がないため、これを firmware 情報源として使わない。
-   Update、Rollback、System Recovery、download、restore は選択しない。
+1. exact `ANE-LX2J 9.1.0.324(C111E37R1P6)` の OTA metadata または公式 package URL を、
+   model/CUST/build が全て一致する形で見つける。別 region / E 値 / build は候補外とする。
 2. exact firmware の整合性が確認できるまで root/recovery/GSI image を flash しない。
 3. unlock probe を再開する場合でも index=1 は送信・再分類せず、index=2から最大4候補に限る。

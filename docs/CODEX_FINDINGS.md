@@ -210,3 +210,15 @@ security patch `2020-04-01`、CPU `HiSilicon Kirin 659` を確認した。
 
 画面に IMEI が表示されたため、スクリーンショットは記録・Git管理せず、その場で削除した。
 この確認では端末への書き込みや設定変更をしていない。
+
+## OTA 識別用 build property の read-only 確認
+
+唯一の expected ADB serial を確認した上で、以下を read-only で取得した。
+
+```text
+ro.build.version.incremental=9.1.0.324C111
+ro.build.display.id=ANE-LX2J 9.1.0.324(C111E37R1P6)
+ro.build.version.base_os=HUAWEI/ANE-LX2J/HWANE:9/HUAWEIANE-LX2J/9.1.0.282C111:user/release-keys
+```
+
+この確認では書き込み、再起動、Fastboot、unlock、flash を実行していない。
