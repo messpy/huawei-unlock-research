@@ -195,6 +195,23 @@ ro.boot.veritymode=enforcing
 完全なコマンド結果は Git 管理外の `logs/boot_state_20260902_130523.log` に保存した。
 この確認では書き込み、再起動、Fastboot、unlock、flash を実行していない。
 
+## haexhub index=2 fresh Fastboot session再検証（2026-09-02）
+
+AndroidからFastbootへ移行し、対象端末1台とSHA-256先頭12桁 `7004ad3a3cfa` を確認後、index=2を1回送信した。
+
+```text
+[STDOUT] (empty)
+[STDERR]
+FAILED (remote: 'check password failed!')
+fastboot: error: Command failed
+exit_code=1
+elapsed_seconds=0
+timeout=no
+classification=confirmed_failed
+```
+
+ログ: `logs/index2_fresh_recheck_20260902_182031.log`。index=3以降や追加操作は実行していない。
+
 ## haexhub index=2 probe（2026-09-02）
 
 Fastboot端末1台と候補SHA-256先頭12桁 `7004ad3a3cfa` を確認後、ユーザー指定候補を1回送信した。
