@@ -161,3 +161,17 @@ fastboot devices
 
 完全なコマンド結果は Git 管理外の
 `logs/limited_probe_preflight_20260902_105528.log` に保存した。
+
+## 通常 Android 起動後の boot-state ベースライン（実測済み）
+
+以下は通常 Android 起動後に読み取り専用の `getprop` で観測済みの比較基準である。
+将来の観測値と比較するために保持するが、この記録自体は unlock 成功・失敗の判定を
+行うものではない。
+
+```text
+ro.boot.flash.locked=1
+ro.boot.verifiedbootstate=green
+ro.boot.vbmeta.device_state=locked
+ro.boot.veritymode=enforcing
+ro.build.version.security_patch=2020-04-01
+```

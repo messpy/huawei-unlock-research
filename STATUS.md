@@ -12,6 +12,10 @@
 - timeout 後に確認したところ index=1 は結果未確定。state では過去の未確定記録として
   保持し、index=1 を再送・再分類しない。新規 probe は Fastboot 接続の厳密な事前確認後にのみ
   index=2から開始する。
+- 通常 Android 起動後の既知ベースラインは `ro.boot.flash.locked=1`、
+  `ro.boot.verifiedbootstate=green`、`ro.boot.vbmeta.device_state=locked`、
+  `ro.boot.veritymode=enforcing`、security patch `2020-04-01`。比較用の実測記録として
+  `docs/CODEX_FINDINGS.md` に保持する。
 
 ## Next action
 
