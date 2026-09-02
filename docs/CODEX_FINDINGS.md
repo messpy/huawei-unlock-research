@@ -212,6 +212,24 @@ classification=confirmed_failed
 
 ログ: `logs/index2_fresh_recheck_20260902_182031.log`。index=3以降や追加操作は実行していない。
 
+## haexhub index=3 probe（2026-09-02）
+
+ADBで対象端末1台とlocked/green状態を確認後、Fastbootへ移行し、SHA-256先頭12桁
+`3eb5c2f1956e`を確認してindex=3を1回送信した。
+
+```text
+[STDOUT] (empty)
+[STDERR]
+FAILED (remote: 'check password failed!')
+fastboot: error: Command failed
+exit_code=1
+elapsed_seconds=0
+timeout=no
+classification=confirmed_failed
+```
+
+ログ: `logs/index3_probe_20260902_183526.log`。index=4以降や追加操作は実行していない。
+
 ## haexhub index=2 probe（2026-09-02）
 
 Fastboot端末1台と候補SHA-256先頭12桁 `7004ad3a3cfa` を確認後、ユーザー指定候補を1回送信した。
